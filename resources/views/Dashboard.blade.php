@@ -85,7 +85,7 @@
 
 <div class="breadcrumb-bar d-flex align-items-center">
     <i class="fa-solid fa-bars me-3 d-lg-none" id="sidebar-toggler"></i>
-    <span class="breadcrumb-text">Dashboard / <span class="active">Ringkasan Hari Ini</span></span>
+    <span class="breadcrumb-text">Dashboard / <span class="active">Recap Hari Ini</span></span>
 </div>
 
 <main class="content-main">
@@ -118,7 +118,7 @@
         </div>
         <div class="col-md-4">
             <div class="stat-card card-success">
-                <h6>Penerimaan</h6>
+                <h6>Penerimaan Pembayaran</h6>
                 <p>Rp. {{ number_format($terimaPembayaran, 0, ',', '.') }}</p>
             </div>
         </div>
