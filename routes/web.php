@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StockInController;
 
 // login
 Route::get('/', function () {
@@ -39,6 +40,13 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('suppliers', SupplierController::class)->except(['show']);
         Route::resource('products', ProductController::class)->except(['show']);
+    });
+
+    //Stock in
+     Route::prefix('inventory')->name('inventory.')->group(function() {
+        Route::get('stock-in', [StockInController::class, 'index'])->name('stock-in.index');
+        Route::post('stock-in', [StockInController::class, 'store'])->name('stock-in.store');
+        Route::delete('stock-in/{stockIn}', [StockInController::class, 'destroy'])->name('stock-in.destroy');
     });
 
     //Report

@@ -149,8 +149,16 @@
                         Report</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('inventory') }}"><i class="fa-solid fa-warehouse"></i>
-                        Inventory</a>
+                    <a class="nav-link" href="#inventory-submenu" data-bs-toggle="collapse" role="button">
+                        <i class="fa-solid fa-warehouse"></i> Inventory
+                    </a>
+                    <div class="collapse" id="inventory-submenu">
+                        <ul class="nav flex-column ps-4">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('inventory.stock-in.index') }}">Stock In</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('orders') }}"><i class="fa-solid fa-list-alt"></i> Order
