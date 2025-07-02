@@ -11,7 +11,13 @@ class OrderDetail extends Model
 
     public $timestamps = false; 
 
-    protected $guarded = ['id'];
+     protected $fillable = [
+        'order_id',
+        'product_id',
+        'quantity',
+        'price',
+        'subtotal',
+    ];
 
     public function order()
     {

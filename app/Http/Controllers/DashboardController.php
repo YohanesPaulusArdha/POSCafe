@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderDetail;
-use Carbon\Carbon; // Library untuk mengelola tanggal
+use Carbon\Carbon; 
 
 class DashboardController extends Controller
 {
@@ -14,13 +14,10 @@ class DashboardController extends Controller
         
         $selectedDate = $request->input('date', Carbon::today()->toDateString());
 
-        //total transaksi
         $totalTransaksi = Order::whereDate('created_at', $selectedDate)->count();
 
-        //total pembayaran diterima
         $terimaPembayaran = Order::whereDate('created_at', $selectedDate)->sum('total_amount');
 
-        //total produk terjual
         $totalProdukTerjual = OrderDetail::whereHas('order', function ($query) use ($selectedDate) {
             $query->whereDate('created_at', $selectedDate);
         })->sum('quantity');

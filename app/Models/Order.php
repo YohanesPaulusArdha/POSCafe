@@ -10,7 +10,15 @@ class Order extends Model
     use HasFactory;
 
     
-    protected $guarded = ['id']; 
+    protected $fillable = [
+        'invoice_number',
+        'user_id',
+        'total_amount',
+        'amount_paid',
+        'change',
+        'payment_method',
+        'status',
+    ];
 
     public function user()
     {
