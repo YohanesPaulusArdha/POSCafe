@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class POSController extends Controller
 {
@@ -18,16 +19,24 @@ class POSController extends Controller
         $products = Product::with('category')->get();
         $categories = Category::all();
 
-       
+        $paidOrders = Order::where('status', 'Completed')
+            ->whereDate('created_at', Carbon::today())
+            ->with('user')
+            ->latest()
+            ->get();
+
+
+
         return view('POS', [
             'products' => $products,
-            'categories' => $categories
+            'categories' => $categories,
+            'paidOrders' => $paidOrders,
+
         ]);
     }
 
     public function storeOrder(Request $request)
     {
-        
         $validator = Validator::make($request->all(), [
             'items' => 'required|array|min:1',
             'items.*.id' => 'required|exists:product,id',
@@ -40,12 +49,11 @@ class POSController extends Controller
             'amount_paid' => 'nullable|numeric',
             'change' => 'nullable|numeric',
         ]);
-
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
         }
 
-        
+
         DB::beginTransaction();
         try {
             $order = Order::create([
@@ -57,7 +65,6 @@ class POSController extends Controller
                 'payment_method' => $request->payment_method,
                 'status' => 'Completed',
             ]);
-
             foreach ($request->items as $item) {
                 $product = Product::find($item['id']);
                 OrderDetail::create([
@@ -67,17 +74,14 @@ class POSController extends Controller
                     'price' => $product->price,
                     'subtotal' => $product->price * $item['quantity'],
                 ]);
-
-              
                 $product->decrement('stock', $item['quantity']);
             }
 
-            DB::commit(); 
-
+            DB::commit();
             return response()->json(['success' => true, 'message' => 'Pesanan berhasil disimpan!']);
 
         } catch (\Exception $e) {
-            DB::rollBack(); 
+            DB::rollBack();
             return response()->json(['success' => false, 'message' => 'Terjadi kesalahan saat menyimpan pesanan.'], 500);
         }
     }

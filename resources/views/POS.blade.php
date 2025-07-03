@@ -82,8 +82,10 @@
             <div class="collapse navbar-collapse" id="posNavbar">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('orders') }}">Daftar Order</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('report.sales') }}">Riwayat Transaksi</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('orders') }}">Riwayat Transaksi</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#myOrderModal">Daftar Order</a>
+                    </li>
                 </ul>
                 <a href="{{ route('logout') }}"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
@@ -226,6 +228,45 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="button" class="btn btn-primary" id="process-payment-button">Konfirmasi Pembayaran</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myOrderModal" tabindex="-1" aria-labelledby="myOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="myOrderModalLabel">My Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @forelse ($paidOrders as $order)
+                        <div class="card mb-2">
+                            <div class="card-body p-3">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p class="mb-1 small"><strong>No Invoice:</strong> {{ $order->invoice_number }}</p>
+                                        <p class="mb-1 small"><strong>Cashier:</strong> {{ $order->user->name ?? 'N/A' }}</p>
+                                        <p class="mb-1 small"><strong>Metode:</strong> {{ $order->payment_method }}</p>
+                                        <p class="mb-0 small"><strong>Total:</strong>
+                                            Rp{{ number_format($order->total_amount, 0, ',', '.') }}</p>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <p class="mb-1 small"><strong>Customer:</strong> -</p>
+                                        <p class="mb-0 small"><strong>Date:</strong>
+                                            {{ $order->created_at->format('d-m-Y H:i') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-center text-muted p-4">
+                            Belum ada order yang dibayar hari ini.
+                        </div>
+                    @endforelse
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

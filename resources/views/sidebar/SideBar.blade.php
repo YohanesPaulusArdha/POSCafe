@@ -118,8 +118,8 @@
                             class="fa-solid fa-cash-register"></i> POS</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('absensi') ? 'active' : '' }}"
-                        href="{{ route('absensi') }}"><i class="fa-solid fa-user-check"></i> Absensi</a>
+                    <a class="nav-link {{ request()->routeIs('attendance.*') ? 'active' : '' }}"
+                        href="{{ route('attendance.index') }}"><i class="fa-solid fa-user-check"></i> Absensi</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
@@ -145,8 +145,23 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('report.sales') }}"><i class="fa-solid fa-file-alt"></i>
-                        Report</a>
+                    <a class="nav-link collapsed" href="#report-submenu" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="report-submenu">
+                        <i class="fa-solid fa-file-alt"></i> Report
+                    </a>
+                    <div class="collapse" id="report-submenu">
+                        <ul class="nav flex-column ps-4">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('report.gross-profit') }}">Gross Profit</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('report.payment-method') }}">Payment Method</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('report.absensi') }}">Absensi</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#inventory-submenu" data-bs-toggle="collapse" role="button">
@@ -165,7 +180,8 @@
                         Pesanan</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('users') }}"><i class="fa-solid fa-users"></i> Users</a>
+                    <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}"
+                        href="{{ route('users.index') }}"><i class="fa-solid fa-users"></i> Users</a>
                 </li>
             </ul>
         </aside>

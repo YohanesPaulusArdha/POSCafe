@@ -9,6 +9,10 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StockInController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\UserController;
+
 
 // login
 Route::get('/', function () {
@@ -28,9 +32,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     //Absensi
-    Route::get('/absensi', function () {
-        return "<h1>Halaman Absensi</h1>"; 
-    })->name('absensi');
+    Route::controller(AttendanceController::class)->prefix('attendance')->name('attendance.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/clock-in', 'clockIn')->name('clock-in');
+        Route::post('/clock-out', 'clockOut')->name('clock-out');
+    });
 
     //Buat order    
     Route::post('/orders/store', [POSController::class, 'storeOrder'])->name('orders.store');
@@ -43,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     //Stock in
-     Route::prefix('inventory')->name('inventory.')->group(function() {
+    Route::prefix('inventory')->name('inventory.')->group(function () {
         Route::get('stock-in', [StockInController::class, 'index'])->name('stock-in.index');
         Route::post('stock-in', [StockInController::class, 'store'])->name('stock-in.store');
         Route::delete('stock-in/{stockIn}', [StockInController::class, 'destroy'])->name('stock-in.destroy');
@@ -51,18 +57,22 @@ Route::middleware(['auth'])->group(function () {
 
     //Report
     Route::prefix('report')->name('report.')->group(function () {
-        Route::get('/sales', function () {
-            return "<h1>Halaman Laporan Penjualan</h1>"; })->name('sales');
-    });
+        Route::get('/gross-profit', [ReportController::class, 'grossProfit'])->name('gross-profit');
+        Route::get('/payment-method', [ReportController::class, 'paymentMethod'])->name('payment-method');
+        Route::get('/absensi', [ReportController::class, 'absensi'])->name('absensi');
 
-    //Inventory
-    Route::get('/inventory', function () {
-        return "<h1>Halaman Inventory</h1>"; })->name('inventory');
+        //Print excel, pdf
+        Route::get('/gross-profit/export-excel', [ReportController::class, 'exportGrossProfitExcel'])->name('gross-profit.export-excel');
+        Route::get('/gross-profit/export-pdf', [ReportController::class, 'exportGrossProfitPdf'])->name('gross-profit.export-pdf');
+        Route::get('/payment-method/export-excel', [ReportController::class, 'exportPaymentMethodExcel'])->name('payment-method.export-excel');
+        Route::get('/payment-method/export-pdf', [ReportController::class, 'exportPaymentMethodPdf'])->name('payment-method.export-pdf');
+        Route::get('/absensi/export-excel', [ReportController::class, 'exportAbsensiExcel'])->name('absensi.export-excel');
+        Route::get('/absensi/export-pdf', [ReportController::class, 'exportAbsensiPdf'])->name('absensi.export-pdf');
+    });
 
     //Pesanan 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders');
 
     //Users
-    Route::get('/users', function () {
-        return "<h1>Halaman Manajemen User</h1>"; })->name('users');
+    Route::resource('users', UserController::class)->except(['show']);
 });
